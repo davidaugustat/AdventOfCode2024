@@ -5,8 +5,7 @@ import com.davidaugustat.aoc2024.utils.TextFileReader;
 import java.util.List;
 
 public class Day04 {
-    private record Point(int i, int j) {
-    }
+    private record Point(int i, int j) { }
 
     public Day04() {
         char[][] grid = TextFileReader.readCharGridFromFile("day04/input.txt");
@@ -71,7 +70,6 @@ public class Day04 {
 
         int foundTraces = 0;
         for (List<Point> trace : indexTraces) {
-
             boolean isValid = true;
             for (int k = 0; k < trace.size(); k++) {
                 Point point = trace.get(k);
