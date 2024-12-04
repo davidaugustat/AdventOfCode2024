@@ -52,12 +52,12 @@ public class Day04 {
     }
 
     private int numOccuringTracesTotal(char[][] grid, List<List<Point>> indexTraces, String word) {
-        int j_len = grid.length; // size in j-direction (rows)
-        int i_len = grid[0].length; // size in i-direction (columns)
+        int jLen = grid.length; // size in j-direction (rows)
+        int iLen = grid[0].length; // size in i-direction (columns)
 
         int numOccurences = 0;
-        for (int j = 0; j < j_len; j++) {
-            for (int i = 0; i < i_len; i++) {
+        for (int j = 0; j < jLen; j++) {
+            for (int i = 0; i < iLen; i++) {
                 numOccurences += numOccurringTracesAtPosition(i, j, grid, indexTraces, word);
             }
         }
@@ -65,21 +65,21 @@ public class Day04 {
     }
 
     private int numOccurringTracesAtPosition(int i, int j, char[][] grid, List<List<Point>> indexTraces, String word) {
-        int j_len = grid.length; // size in j-direction (rows)
-        int i_len = grid[0].length; // size in i-direction (columns)
+        int jLen = grid.length; // size in j-direction (rows)
+        int iLen = grid[0].length; // size in i-direction (columns)
 
         int foundTraces = 0;
         for (List<Point> trace : indexTraces) {
             boolean isValid = true;
             for (int k = 0; k < trace.size(); k++) {
                 Point point = trace.get(k);
-                int i_current = i + point.i;
-                int j_current = j + point.j;
-                if (i_current < 0 || j_current < 0 || i_current >= i_len || j_current >= j_len) {
+                int iCurrent = i + point.i;
+                int jCurrent = j + point.j;
+                if (iCurrent < 0 || jCurrent < 0 || iCurrent >= iLen || jCurrent >= jLen) {
                     isValid = false;
                     break;
                 }
-                if (grid[j_current][i_current] != word.charAt(k)) {
+                if (grid[jCurrent][iCurrent] != word.charAt(k)) {
                     isValid = false;
                     break;
                 }
