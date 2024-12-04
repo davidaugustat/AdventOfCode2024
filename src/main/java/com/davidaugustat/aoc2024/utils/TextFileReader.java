@@ -25,4 +25,15 @@ public class TextFileReader {
             throw new RuntimeException(e);
         }
     }
+
+    public static char[][] readCharGridFromFile(String path){
+        List<String> lines = readLinesFromFile(path);
+        char[][] grid = new char[lines.size()][lines.getFirst().length()];
+        for(int j=0; j<grid.length; j++){
+            for(int i=0; i<grid[0].length; i++){
+                grid[j][i] = lines.get(j).charAt(i);
+            }
+        }
+        return grid;
+    }
 }
