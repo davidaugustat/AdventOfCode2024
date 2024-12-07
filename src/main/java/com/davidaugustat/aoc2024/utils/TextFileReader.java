@@ -36,4 +36,22 @@ public class TextFileReader {
         }
         return grid;
     }
+
+    /**
+     * Returns a grid such that
+     * <ul>
+     *     <li>the first index indicates the column (x direction)</li>
+     *     <li>the second index indicates the row (y direction)</li>
+     * </ul>
+     */
+    public static char[][] readColumnsFirstCharGridFromFile(String path){
+        List<String> lines = readLinesFromFile(path);
+        char[][] grid = new char[lines.getFirst().length()][lines.size()];
+        for(int j=0; j<grid.length; j++){
+            for(int i=0; i<grid[0].length; i++){
+                grid[i][j] = lines.get(j).charAt(i);
+            }
+        }
+        return grid;
+    }
 }
