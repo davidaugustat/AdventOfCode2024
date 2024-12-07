@@ -17,19 +17,19 @@ public class Day07 {
     }
 
     private void part1(List<Equation> equations) {
-        long numSatisfiableEquations = equations.stream()
+        long sumSatisfiableEquations = equations.stream()
                 .filter(this::isSatisfiableAddMult)
                 .map(Equation::result)
                 .reduce(0L, Long::sum);
-        System.out.println("Part 1: " + numSatisfiableEquations);
+        System.out.println("Part 1: " + sumSatisfiableEquations);
     }
 
     private void part2(List<Equation> equations) {
-        long numSatisfiableEquations = equations.stream()
+        long sumSatisfiableEquations = equations.stream()
                 .filter(this::isSatisfiableAddMultConcat)
                 .map(Equation::result)
                 .reduce(0L, Long::sum);
-        System.out.println("Part 2: " + numSatisfiableEquations);
+        System.out.println("Part 2: " + sumSatisfiableEquations);
     }
 
     private Equation parseEquation(String line) {
