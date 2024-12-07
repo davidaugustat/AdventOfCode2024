@@ -11,7 +11,6 @@ public class Day07 {
     public Day07() {
         List<String> lines = TextFileReader.readLinesFromFile("day07/input.txt");
         List<Equation> equations = lines.stream().map(this::parseEquation).toList();
-        System.out.println(equations);
 
         part1(equations);
         part2(equations);
