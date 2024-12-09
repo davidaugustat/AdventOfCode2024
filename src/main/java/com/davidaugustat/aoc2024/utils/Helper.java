@@ -22,4 +22,24 @@ public class Helper {
         }
         return a;
     }
+
+    /**
+     * Measures the execution time of a piece of code and prints the time to standard output.
+     * <p>
+     * Usage:
+     * <pre>
+     * {@code
+     * Helper.measureExecutionTime(() -> {
+     *     // code to measure
+     * });
+     * }
+     * </pre>
+     */
+    public static void measureExecutionTime(Runnable code){
+        long start = System.nanoTime();
+        code.run();
+        long finish = System.nanoTime();
+        double timeElapsedMillis = (finish - start) / 1_000_000.0;
+        System.out.println("Execution Time: " + timeElapsedMillis + " ms");
+    }
 }
