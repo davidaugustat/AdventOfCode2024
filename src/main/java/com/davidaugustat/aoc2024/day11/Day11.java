@@ -40,22 +40,22 @@ public class Day11 {
             long value = entry.getKey();
             long occurrences = entry.getValue();
             if (value == 0) {
-                addOrIncrement(1L, updated, occurrences);
+                insertOrIncrease(1L, updated, occurrences);
             } else if (Long.toString(value).length() % 2 == 0) {
                 String stoneString = Long.toString(value);
                 long stone1 = Long.parseLong(stoneString.substring(0, stoneString.length() / 2));
                 long stone2 = Long.parseLong(stoneString.substring(stoneString.length() / 2));
-                addOrIncrement(stone1, updated, occurrences);
-                addOrIncrement(stone2, updated, occurrences);
+                insertOrIncrease(stone1, updated, occurrences);
+                insertOrIncrease(stone2, updated, occurrences);
             } else {
-                addOrIncrement(value * 2024L, updated, occurrences);
+                insertOrIncrease(value * 2024L, updated, occurrences);
             }
         }
         return updated;
     }
 
-    private void addOrIncrement(long stone, Map<Long, Long> stoneOccurrences, long times) {
-        stoneOccurrences.put(stone, stoneOccurrences.getOrDefault(stone, 0L) + times);
+    private void insertOrIncrease(long stone, Map<Long, Long> stoneOccurrences, long times) {
+        stoneOccurrences.merge(stone, times, Long::sum);
     }
 
     public static void main(String[] args) {
