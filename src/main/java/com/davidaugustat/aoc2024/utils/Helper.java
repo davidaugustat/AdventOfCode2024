@@ -1,6 +1,9 @@
 package com.davidaugustat.aoc2024.utils;
 
-import com.davidaugustat.aoc2024.day13.Day13;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Helper {
     public static String[] splitWhitespace(String text) {
@@ -79,5 +82,31 @@ public class Helper {
         long finish = System.nanoTime();
         double timeElapsedMillis = (finish - start) / 1_000_000.0;
         System.out.println("Execution Time: " + timeElapsedMillis + " ms");
+    }
+
+    public static int mod(int a, int b) {
+        return (a % b + b) % b;
+    }
+
+    public static void createImageFromBooleanArray(boolean[][] data, String outputPath) {
+        int width = data.length;
+        int height = data[0].length;
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                // Set the pixel to black for true and white for false
+                int color = data[x][y] ? 0xFF000000 : 0xFFFFFFFF;
+                image.setRGB(x, y, color);
+            }
+        }
+
+        try {
+            File outputFile = new File(outputPath);
+            ImageIO.write(image, "png", outputFile);
+            System.out.println("Image created at: " + outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            System.err.println("Error writing image file: " + e.getMessage());
+        }
     }
 }
