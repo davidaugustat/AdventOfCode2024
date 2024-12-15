@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Helper {
     public static String[] splitWhitespace(String text) {
@@ -108,5 +109,34 @@ public class Helper {
         } catch (IOException e) {
             System.err.println("Error writing image file: " + e.getMessage());
         }
+    }
+
+    public static char[][] linesToColumnFirstCharGrid(List<String> lines) {
+        char[][] grid = new char[lines.getFirst().length()][lines.size()];
+        for (int j = 0; j < grid.length; j++) {
+            for (int i = 0; i < grid[0].length; i++) {
+                grid[i][j] = lines.get(j).charAt(i);
+            }
+        }
+        return grid;
+    }
+
+    public static Point findInCharGrid(char[][] grid, char target) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == target) {
+                    return new Point(i, j);
+                }
+            }
+        }
+        throw new IllegalArgumentException("Target not found");
+    }
+
+    public static char[][] copyGrid(char[][] grid) {
+        char[][] copy = new char[grid.length][grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            System.arraycopy(grid[i], 0, copy[i], 0, grid[i].length);
+        }
+        return copy;
     }
 }
