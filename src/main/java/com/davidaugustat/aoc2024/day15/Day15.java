@@ -9,24 +9,12 @@ import java.util.List;
 public class Day15 {
     public Day15() {
         List<String> lines = TextFileReader.readLinesFromFile("day15/input.txt");
-        lines.stream().filter(line -> line.length() < 2).findFirst().get();
-        int split = findEmptyLine(lines);
+        int split = lines.indexOf("");
         char[][] grid = Helper.linesToColumnFirstCharGrid(lines.subList(0, split));
         String moves = String.join("", lines.subList(split + 1, lines.size()));
 
         part1(Helper.copyGrid(grid), moves);
         part2(Helper.copyGrid(grid), moves);
-    }
-
-    private int findEmptyLine(List<String> lines) {
-        int split = -1;
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines.get(i).length() < 2) {
-                split = i;
-                break;
-            }
-        }
-        return split;
     }
 
     private void part1(char[][] grid, String moves) {
@@ -59,25 +47,15 @@ public class Day15 {
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                char c1 = 0, c2 = 0;
-                switch (grid[i][j]) {
-                    case '#':
-                        c1 = c2 = '#';
-                        break;
-                    case 'O':
-                        c1 = '[';
-                        c2 = ']';
-                        break;
-                    case '.':
-                        c1 = c2 = '.';
-                        break;
-                    case '@':
-                        c1 = '@';
-                        c2 = '.';
-                        break;
-                }
-                wideGrid[2 * i][j] = c1;
-                wideGrid[2 * i + 1][j] = c2;
+                String replacement = switch (grid[i][j]) {
+                    case '#' -> "##";
+                    case 'O' -> "[]";
+                    case '.' -> "..";
+                    case '@' -> "@.";
+                    default -> "  ";
+                };
+                wideGrid[2 * i][j] = replacement.charAt(0);
+                wideGrid[2 * i + 1][j] = replacement.charAt(1);
             }
         }
         return wideGrid;
@@ -116,84 +94,82 @@ public class Day15 {
         return robotPos;
     }
 
-    private boolean moveWideBox(Point boxPos1, char move, char[][] grid) {
-        // boxPos always indicates the left part of the box
+    private void moveWideBox(Point boxPos1, char move, char[][] grid) {
+        if (move == '<' || move == '>') {
+            moveWideBoxHorizontally(boxPos1, move, grid);
+        } else {
+            moveWideBoxVertically(boxPos1, move, grid);
+        }
+    }
+
+    private void moveWideBoxHorizontally(Point boxPos1, char move, char[][] grid) {
+        // boxPos1 always indicates the left part of the box
         Point boxPos2 = boxPos1.add(new Point(1, 0));
         Point direction = moveCharToDirection(move);
-        if (move == '<' || move == '>') {
+
+        Point nextPos = move == '<' ? boxPos1.add(direction) : boxPos2.add(direction);
+        char nextChar = nextPos.gridValue(grid);
+        if (nextChar == '#') {
+            return;
+        }
+        if (nextChar == '[' || nextChar == ']') {
+            Point nextBoxPos1 = boxPos1.add(direction.multiply(2));
+            moveWideBoxHorizontally(nextBoxPos1, move, grid);
+        }
+        // Reload value after next box may have been moved:
+        nextChar = nextPos.gridValue(grid);
+        if (nextChar == '.') {
             if (move == '<') {
-                char nextChar = boxPos1.add(direction).gridValue(grid);
-                if (nextChar == '#') {
-                    return false;
-                }
-                if (nextChar == ']') {
-                    Point nextBoxPos1 = boxPos1.add(direction.multiply(2));
-                    moveWideBox(nextBoxPos1, move, grid);
-                }
-                nextChar = boxPos1.add(direction).gridValue(grid);
-                if (nextChar == '.') {
-                    // This gets triggered when either there already was a space in front of this box of if
-                    // the previous recursive call made space in front of the box.
-                    boxPos1.add(direction).gridSet(grid, '[');
-                    boxPos1.gridSet(grid, ']');
-                    boxPos2.gridSet(grid, '.');
-                    return true;
-                }
-                return false;
-            } else { // >
-                char nextChar = boxPos2.add(direction).gridValue(grid);
-                if (nextChar == '#') {
-                    return false;
-                }
-                if (nextChar == '[') {
-                    Point nextBoxPos1 = boxPos1.add(direction.multiply(2));
-                    moveWideBox(nextBoxPos1, move, grid);
-                }
-                nextChar = boxPos2.add(direction).gridValue(grid);
-                if (nextChar == '.') {
-                    // This gets triggered when either there already was a space in front of this box of if
-                    // the previous recursive call made space in front of the box.
-                    boxPos2.gridSet(grid, '[');
-                    boxPos2.add(direction).gridSet(grid, ']');
-                    boxPos1.gridSet(grid, '.');
-                    return true;
-                }
-                return false;
-            }
-        } else {
-            // move vertically
-            if (!isBoxMovableVerticallyWideGrid(boxPos1, direction, grid)) {
-                return false;
-            }
-            char nextCharLeft = boxPos1.add(direction).gridValue(grid);
-            char nextCharRight = boxPos2.add(direction).gridValue(grid);
-            if (nextCharLeft == '#' || nextCharRight == '#') {
-                return false;
-            }
-            if (nextCharLeft == '[') {
-                // box directly in front
-                moveWideBox(boxPos1.add(direction), move, grid);
-            }
-            if (nextCharLeft == ']') {
-                // box half to the left:
-                Point nextBox1 = boxPos1.add(direction).add(new Point(-1, 0));
-                moveWideBox(nextBox1, move, grid);
-            }
-            if (nextCharRight == '[') {
-                // box half to the right:
-                Point nextBox1 = boxPos2.add(direction);
-                moveWideBox(nextBox1, move, grid);
-            }
-            nextCharLeft = boxPos1.add(direction).gridValue(grid);
-            nextCharRight = boxPos2.add(direction).gridValue(grid);
-            if (nextCharLeft == '.' && nextCharRight == '.') {
-                boxPos1.add(direction).gridSet(grid, '[');
-                boxPos2.add(direction).gridSet(grid, ']');
-                boxPos1.gridSet(grid, '.');
+                nextPos.gridSet(grid, '[');
+                boxPos1.gridSet(grid, ']');
                 boxPos2.gridSet(grid, '.');
-                return true;
+            } else {
+                boxPos2.gridSet(grid, '[');
+                nextPos.gridSet(grid, ']');
+                boxPos1.gridSet(grid, '.');
             }
-            return false;
+        }
+    }
+
+    private void moveWideBoxVertically(Point boxPos1, char move, char[][] grid) {
+        // boxPos1 always indicates the left part of the box
+        Point boxPos2 = boxPos1.add(new Point(1, 0));
+        Point direction = moveCharToDirection(move);
+
+        if (!isBoxMovableVerticallyWideGrid(boxPos1, direction, grid)) {
+            return;
+        }
+
+        Point nextPosLeft = boxPos1.add(direction);
+        Point nextPosRight = boxPos2.add(direction);
+        char nextCharLeft = nextPosLeft.gridValue(grid);
+        char nextCharRight = nextPosRight.gridValue(grid);
+
+        if (nextCharLeft == '#' || nextCharRight == '#') {
+            return;
+        }
+        if (nextCharLeft == '[') {
+            // box directly in front
+            moveWideBoxVertically(nextPosLeft, move, grid);
+        }
+        if (nextCharLeft == ']') {
+            // box half to the left:
+            Point nextBox1 = nextPosLeft.add(new Point(-1, 0));
+            moveWideBoxVertically(nextBox1, move, grid);
+        }
+        if (nextCharRight == '[') {
+            // box half to the right:
+            moveWideBoxVertically(nextPosRight, move, grid);
+        }
+        // Reload values after next box(es) may have been moved:
+        nextCharLeft = nextPosLeft.gridValue(grid);
+        nextCharRight = nextPosRight.gridValue(grid);
+
+        if (nextCharLeft == '.' && nextCharRight == '.') {
+            nextPosLeft.gridSet(grid, '[');
+            nextPosRight.gridSet(grid, ']');
+            boxPos1.gridSet(grid, '.');
+            boxPos2.gridSet(grid, '.');
         }
     }
 
