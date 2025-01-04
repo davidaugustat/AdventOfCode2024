@@ -27,7 +27,7 @@ I did not include the puzzle inputs in this repository since the [About page](ht
 | 15 | ⭐️ | ⭐️ |
 | 16 | ⭐️ | ⭐️ |
 | 17 | ⭐️ | ⭐️ |
-| 18 |  |  |
+| 18 | ⭐️ | ⭐️ |
 | 19 |  |  |
 | 20 |  |  |
 | 21 |  |  |
