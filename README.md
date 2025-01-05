@@ -29,7 +29,7 @@ I did not include the puzzle inputs in this repository since the [About page](ht
 | 17 | ⭐️ | ⭐️ |
 | 18 | ⭐️ | ⭐️ |
 | 19 | ⭐️ | ⭐️ |
-| 20 |  |  |
+| 20 | ⭐️ | ⭐️ |
 | 21 |  |  |
 | 22 |  |  |
 | 23 |  |  |
